@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import DeckModel from './models/Deck';
+import { config } from 'dotenv';
 
 const app = express();
 
@@ -19,11 +20,9 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello There');
 });
 
-const db = mongoose.connect(
-  'mongodb+srv://ninad:KL2i9ETZgJOZ5rkz@cluster0.01khfam.mongodb.net/?retryWrites=true&w=majority'
-);
-
 const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on PORT ${PORT}`);
+const db = mongoose.connect(process.env.MONGO_URL!).then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on PORT ${PORT}`);
+  });
 });
