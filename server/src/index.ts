@@ -4,6 +4,10 @@ import DeckModel from './models/Deck';
 import { config } from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import { createDeckController } from './controllers/createDeckController';
+import { deleteDeckController } from './controllers/deleteDeckController';
+import { getDecksController } from './controllers/getDecksController';
+import { createNewCardController } from './controllers/createNewCardController';
 
 config();
 const app = express();
@@ -13,29 +17,11 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post('/decks', async (req: Request, res: Response) => {
-  const newDeck = new DeckModel({
-    title: req.body.title,
-  });
-  const result = await newDeck.save();
+app.post('/decks', createDeckController);
+app.delete('/decks/:deckId', deleteDeckController);
+app.get('/decks', getDecksController);
 
-  res.json(result);
-});
-
-app.delete('/decks/:deckId', async (req: Request, res: Response) => {
-  const deckId = req.params.deckId;
-  const deletedDeck = await DeckModel.findByIdAndDelete(deckId);
-
-  res.json(deletedDeck);
-});
-
-app.get('/decks', async (req: Request, res: Response) => {
-  const allDecks = await DeckModel.find();
-
-  console.log(allDecks);
-
-  res.json(allDecks);
-});
+app.post('/decks/:deckId/card', createNewCardController);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello There');
