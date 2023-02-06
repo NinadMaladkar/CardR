@@ -5,7 +5,7 @@ import { createCard } from '../api/createCard';
 import { deleteCardFromDeck } from '../api/deleteCardFromDeck';
 import { Deck } from '../api/fetchAllDecks';
 import { getSingleDeck } from '../api/getSingleDeck';
-import '../App.css';
+import './SingleDeck.css';
 
 interface Card {
   text: string;
@@ -17,10 +17,14 @@ const SingleDeck = () => {
   const [text, setText] = useState<string>('');
   const [cards, setCards] = useState<string[]>([]);
 
-  const handleCreateCard = async (deckId: any, cardText: string) => {
-    const result = await createCard(deckId, cardText);
+  const handleCreateCard = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!deckId) return;
+
+    const result = await createCard(deckId, text);
 
     setCards(result.cards);
+    setText('');
   };
 
   const handleDeleteCard = async (cardIndex: number) => {
@@ -34,38 +38,42 @@ const SingleDeck = () => {
     const getDeckData = async () => {
       if (!deckId) return;
       const newDeck = await getSingleDeck(deckId);
-      console.log(' <<>> ', newDeck);
 
       setDeck(newDeck);
       setCards(newDeck.cards);
     };
     getDeckData();
-    console.log(deck, ' <<< DECK');
   }, [deckId]);
 
   return (
-    <div className='cardContainer'>
-      <div className='decks'>
+    <div className='card-container'>
+      <form onSubmit={handleCreateCard}>
+        <fieldset className='form-fieldset'>
+          <h3>Add New Card</h3>
+          <label htmlFor='create-card'>Card Title </label>
+          <input
+            id='create-card'
+            className='card-input'
+            value={text}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setText(e.target.value);
+            }}
+          />
+          <button type='submit' className='submit'>
+            Add Card
+          </button>
+        </fieldset>
+      </form>
+      <div className='cards'>
         {cards
           ? cards.map((card: string, index: number) => (
               <li key={index}>
-                {card}{' '}
+                {card}
                 <button onClick={() => handleDeleteCard(index)}>x</button>
               </li>
             ))
           : 'No card for this deck!'}
       </div>
-      <label htmlFor='create-card'>Create Card</label>
-      <input
-        className='card-input'
-        id='create-card'
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button
-        className='create-card-btn'
-        onClick={() => handleCreateCard(deckId, text)}>
-        Create Card
-      </button>
     </div>
   );
 };

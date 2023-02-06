@@ -1,10 +1,13 @@
-.cardContainer {
+.card-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 20px;
-	width: 500px;
+	justify-content: center;
+	width: 100%;
+}
 
+.form-fieldset {
+	margin-bottom: 3rem;
 }
 
 .card-input {
@@ -14,4 +17,33 @@
 
 .create-card-btn {
 		width: 50%;
+}
+
+.cards {
+	display: flex;
+	gap: 20px;
+	width: 80%;
+	color: black;
+}
+
+.cards li {
+	position: relative;
+	font-size: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 90%;
+	height: 100px;
+	background: white;
+	border: 1px solid white;
+	border-radius: 10px;
+}
+
+.cards li button {
+	position: absolute;
+	font-size: 14px;
+	right: 0;
+	top: 0;
+
 }

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
 import { Link } from 'react-router-dom';
 import { Deck, fetchAllDecks } from './api/fetchAllDecks';
 import { deleteDeck } from './api/deleteDeck';
 import { createDeck } from './api/createDeck';
+import './App.css';
 
 function App() {
   const [title, setTitle] = useState('');
@@ -33,6 +32,25 @@ function App() {
 
   return (
     <div className='App'>
+      <form onSubmit={handleCreateDeck}>
+        <fieldset className='form-fieldset'>
+          <h3>Create New Deck</h3>
+          <label htmlFor='deck-title'>Deck Title </label>
+          <input
+            id='deck-title'
+            className='form-input'
+            value={title}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setTitle(e.target.value);
+            }}
+          />
+          <button type='submit' className='submit'>
+            Create Deck
+          </button>
+        </fieldset>
+      </form>
+      <hr />
+      <h2>Your Current Decks</h2>
       <div className='decks'>
         {decks.map((deck) => (
           <li key={deck._id}>
@@ -41,17 +59,6 @@ function App() {
           </li>
         ))}
       </div>
-      <form onSubmit={handleCreateDeck}>
-        <label htmlFor='deck-title'>Deck Title </label>
-        <input
-          id='deck-title'
-          value={title}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setTitle(e.target.value);
-          }}
-        />
-        <button type='submit'>Create Deck</button>
-      </form>
     </div>
   );
 }
