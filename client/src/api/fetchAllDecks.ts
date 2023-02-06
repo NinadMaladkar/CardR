@@ -3,6 +3,7 @@ import { API_URL } from './config';
 export interface Deck {
   title: string;
   _id: string;
+  cards: string[];
 }
 
 export const fetchAllDecks = async (): Promise<Deck[]> => {
