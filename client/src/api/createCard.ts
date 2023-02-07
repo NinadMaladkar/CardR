@@ -1,9 +1,15 @@
 import { API_URL } from './config';
 import { Deck } from './fetchAllDecks';
 
+export interface Card {
+  frontText: string;
+  backText: string;
+}
+
 export const createCard = async (
   deckId: string,
-  text: string
+  frontText: string,
+  backText: string
 ): Promise<Deck> => {
   const response = await fetch(`${API_URL}/decks/${deckId}/card`, {
     method: 'POST',
@@ -11,8 +17,10 @@ export const createCard = async (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      text: text,
+      frontText: frontText,
+      backText: backText,
     }),
   });
+
   return response.json();
 };

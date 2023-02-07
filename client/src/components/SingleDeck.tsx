@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { createCard } from '../api/createCard';
+import { createCard, Card } from '../api/createCard';
 import { deleteCardFromDeck } from '../api/deleteCardFromDeck';
 import { Deck } from '../api/fetchAllDecks';
 import { getSingleDeck } from '../api/getSingleDeck';
 import './SingleDeck.css';
 
-interface Card {
-  text: string;
-}
-
 const SingleDeck = () => {
   const { deckId } = useParams();
-  const [deck, setDeck] = useState<Deck | null>(null);
-  const [text, setText] = useState<string>('');
-  const [cards, setCards] = useState<string[]>([]);
+  // const [deck, setDeck] = useState<Deck | null>(null);
+  const [frontText, setFrontText] = useState<string>('');
+  const [backText, setBackText] = useState<string>('');
+  const [cards, setCards] = useState<Card[] | null>([]);
+  const [showBackText, setShowBackText] = useState(false);
 
   const handleCreateCard = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!deckId) return;
 
-    const result = await createCard(deckId, text);
+    const result = await createCard(deckId, frontText, backText);
+    console.log('RESULT ===>>>', result);
 
     setCards(result.cards);
-    setText('');
+    setFrontText('');
+    setBackText('');
   };
 
   const handleDeleteCard = async (cardIndex: number) => {
@@ -34,13 +34,18 @@ const SingleDeck = () => {
     setCards(updatedDeck.cards);
   };
 
+  const handleCardFlip = (cardIndex: number) => {
+    console.log(cardIndex);
+
+    setShowBackText((showBackText) => !showBackText);
+  };
+
   useEffect(() => {
     const getDeckData = async () => {
       if (!deckId) return;
       const newDeck = await getSingleDeck(deckId);
 
-      setDeck(newDeck);
-      setCards(newDeck.cards);
+      setCards(newDeck);
     };
     getDeckData();
   }, [deckId]);
@@ -50,13 +55,24 @@ const SingleDeck = () => {
       <form onSubmit={handleCreateCard}>
         <fieldset className='form-fieldset'>
           <h3>Add New Card</h3>
-          <label htmlFor='create-card'>Card Title </label>
+          <label htmlFor='create-card'>Front</label>
           <input
+            required
             id='create-card'
             className='card-input'
-            value={text}
+            value={frontText}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setText(e.target.value);
+              setFrontText(e.target.value);
+            }}
+          />
+          <label htmlFor='create-card'>Back</label>
+          <input
+            required
+            id='create-card'
+            className='card-input'
+            value={backText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setBackText(e.target.value);
             }}
           />
           <button type='submit' className='submit'>
@@ -66,9 +82,9 @@ const SingleDeck = () => {
       </form>
       <div className='cards'>
         {cards
-          ? cards.map((card: string, index: number) => (
+          ? cards.map((card: Card, index: number) => (
               <li key={index}>
-                {card}
+                {card.frontText}
                 <button onClick={() => handleDeleteCard(index)}>x</button>
               </li>
             ))
