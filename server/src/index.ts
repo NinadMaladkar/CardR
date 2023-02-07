@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
 import { config } from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -31,8 +31,21 @@ app.get('/', (req: Request, res: Response) => {
 
 const port = process.env.PORT || 5000;
 
-const db = mongoose.connect(process.env.MONGO_URL!).then(() => {
-  app.listen(port, () => {
-    console.log(`Server running on PORT ${port}`);
+mongoose.set('strictQuery', true);
+mongoose
+  .connect(process.env.MONGO_URL!, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  } as ConnectOptions)
+  .then((res) => {
+    console.log('Connected to Distribution API Database - Initial Connection');
+    app.listen(port, () => {
+      `Connected to - ${port}`;
+    });
+  })
+  .catch((err) => {
+    console.log(
+      `Initial Distribution API Database connection error occured -`,
+      err
+    );
   });
-});
