@@ -8,8 +8,9 @@ export const createNewCardController = async (req: Request, res: Response) => {
 
   if (!deck) return res.status(400).send('No Deck found!');
 
-  const { text } = req.body;
-  deck.cards.push(text);
+  const { frontText, backText } = req.body;
+  const cardText =  { frontText: frontText, backText: backText }
+  deck.cards.push(cardText);
   await deck.save();
 
   res.json(deck);
