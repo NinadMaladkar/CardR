@@ -13,14 +13,12 @@ const SingleDeck = () => {
   const [frontText, setFrontText] = useState<string>('');
   const [backText, setBackText] = useState<string>('');
   const [cards, setCards] = useState<Card[] | null>([]);
-  const [showBackText, setShowBackText] = useState(false);
 
   const handleCreateCard = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!deckId) return;
 
     const result = await createCard(deckId, frontText, backText);
-    console.log('RESULT ===>>>', result);
 
     setCards(result.cards);
     setFrontText('');
@@ -32,12 +30,6 @@ const SingleDeck = () => {
     const updatedDeck = await deleteCardFromDeck(deckId, cardIndex);
 
     setCards(updatedDeck.cards);
-  };
-
-  const handleCardFlip = (cardIndex: number) => {
-    console.log(cardIndex);
-
-    setShowBackText((showBackText) => !showBackText);
   };
 
   useEffect(() => {

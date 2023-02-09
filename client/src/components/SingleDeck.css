@@ -25,7 +25,7 @@
 	display: flex;
 	flex-flow: row wrap;
 	gap: 20px;
-	width: 40%;
+	width: 80%;
 	color: black;
 }
 
@@ -35,7 +35,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 90%;
+	width: 30%;
 	height: 100px;
 	background: white;
 	border: 1px solid white;
